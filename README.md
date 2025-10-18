@@ -121,6 +121,20 @@ Configure your applications to use the SOCKS5 proxy at `127.0.0.1:9000` (or your
 - Check if the key file is encrypted and requires a passphrase
 - Ensure the SSH server accepts your authentication method
 
+## ⚠️ Disclaimer
+
+**IMPORTANT LEGAL NOTICE**
+
+This software is provided for educational and legitimate purposes only. Users are responsible for:
+
+- **Compliance with Laws**: Ensure all usage complies with local, national, and international laws
+- **Authorization**: Only use this tool on systems you own or have explicit permission to access
+- **Security**: Use strong authentication methods and keep credentials secure
+- **Privacy**: Be aware that network traffic may be monitored by network administrators
+- **Terms of Service**: Respect the terms of service of any networks or services you access
+
+**The authors and contributors are not responsible for any misuse of this software. Use at your own risk.**
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -138,20 +152,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📞 Support
 
 If you encounter any issues or have questions, please open an issue on GitHub.
-
-## ⚠️ Disclaimer
-
-**IMPORTANT LEGAL NOTICE**
-
-This software is provided for educational and legitimate purposes only. Users are responsible for:
-
-- **Compliance with Laws**: Ensure all usage complies with local, national, and international laws
-- **Authorization**: Only use this tool on systems you own or have explicit permission to access
-- **Security**: Use strong authentication methods and keep credentials secure
-- **Privacy**: Be aware that network traffic may be monitored by network administrators
-- **Terms of Service**: Respect the terms of service of any networks or services you access
-
-**The authors and contributors are not responsible for any misuse of this software. Use at your own risk.**
 
 ## 🔗 Links
 
