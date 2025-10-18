@@ -1,10 +1,11 @@
 # SSHVaultX VPN
+<img width="150" height="150" alt="SSHVaultX Logo" src="https://github.com/user-attachments/assets/69717329-8b43-4eae-96bc-49ab9542f144" />
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-alicangnll-orange.svg)](https://github.com/alicangnll)
 
-**Fast and Secure SSH over VPN** - Advanced Python implementation with proper SOCKS5 proxy support
+**SSHVaultX VPN - Fast and Secure SSH over VPN** - Advanced Python implementation with proper SOCKS5 proxy support
 
 > A powerful and lightweight SSH-based VPN solution that creates secure tunnels through SSH servers and routes all your network traffic using SOCKS5 proxy protocol. Perfect for bypassing network restrictions, accessing remote resources securely, and protecting your privacy with encrypted connections.
 
