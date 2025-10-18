@@ -74,6 +74,114 @@ SSHVaultX creates a secure tunnel through SSH and routes all your network traffi
 - Python 3.7 or higher
 - SSH server access (with password or key authentication)
 
+## 💻 Operating System Compatibility
+
+### Supported Platforms
+
+| Operating System | Version | Status | Notes |
+|------------------|---------|--------|-------|
+| **Windows** | Windows 10/11 | ✅ Fully Supported | Automatic proxy configuration |
+| **Windows** | Windows 8.1 | ✅ Supported | Manual proxy configuration |
+| **Windows** | Windows 7 | ⚠️ Limited | Manual proxy configuration |
+| **macOS** | 10.14+ | ✅ Fully Supported | Manual proxy configuration |
+| **macOS** | 10.12-10.13 | ✅ Supported | Manual proxy configuration |
+| **Linux** | Ubuntu 18.04+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | Debian 9+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | CentOS 7+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | RHEL 7+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | Fedora 30+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | Arch Linux | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | openSUSE 15+ | ✅ Fully Supported | Manual proxy configuration |
+
+### Platform-Specific Features
+
+#### Windows
+- **Automatic Proxy Configuration**: Automatically sets system-wide proxy settings
+- **Registry Integration**: Modifies Windows Internet Settings registry
+- **⚠️ Administrator Privileges Required**: Must run as Administrator for proxy configuration
+- **Windows Defender**: Compatible with Windows Defender and other antivirus software
+
+#### macOS
+- **Manual Configuration**: Requires manual proxy setup in System Preferences
+- **Terminal Integration**: Works seamlessly with Terminal and iTerm2
+- **Homebrew Support**: Can be installed via Homebrew
+- **Gatekeeper**: Compatible with macOS Gatekeeper security features
+
+#### Linux
+- **Manual Configuration**: Requires manual proxy setup in applications
+- **Package Managers**: Available as .deb and .rpm packages
+- **Systemd Integration**: Can be run as a systemd service
+- **Firewall Compatibility**: Works with iptables, ufw, and firewalld
+
+### Installation Methods by OS
+
+#### Windows
+```bash
+# ⚠️ IMPORTANT: Run Command Prompt or PowerShell as Administrator
+# Right-click on Command Prompt/PowerShell and select "Run as administrator"
+
+# Direct Python installation
+python main.py --ip server.com --user admin --key ~/.ssh/id_rsa
+
+# Or install from source
+git clone https://github.com/alicangnll/sshvaultx.git
+cd sshvaultx
+pip install -r requirements.txt
+
+# Note: Administrator privileges are required for automatic proxy configuration
+```
+
+#### macOS
+```bash
+# Using Homebrew (recommended)
+brew install python3
+pip3 install paramiko
+python3 main.py --ip server.com --user admin --key ~/.ssh/id_rsa
+
+# Or install from source
+git clone https://github.com/alicangnll/sshvaultx.git
+cd sshvaultx
+pip3 install -r requirements.txt
+```
+
+#### Linux (Debian/Ubuntu)
+```bash
+# Install dependencies
+sudo apt-get update
+sudo apt-get install python3 python3-pip
+
+# Install from source
+git clone https://github.com/alicangnll/sshvaultx.git
+cd sshvaultx
+pip3 install -r requirements.txt
+
+# Or install .deb package
+sudo dpkg -i sshvaultx_1.0.0_all.deb
+```
+
+#### Linux (CentOS/RHEL/Fedora)
+```bash
+# Install dependencies
+sudo yum install python3 python3-pip  # CentOS/RHEL
+# or
+sudo dnf install python3 python3-pip  # Fedora
+
+# Install from source
+git clone https://github.com/alicangnll/sshvaultx.git
+cd sshvaultx
+pip3 install -r requirements.txt
+
+# Or install .rpm package
+sudo rpm -i sshvaultx-1.0.0-1.noarch.rpm
+```
+
+### Known Limitations
+
+- **Windows XP/Vista**: Not supported (Python 3.7+ required)
+- **macOS 10.11 and earlier**: Not supported (Python 3.7+ required)
+- **32-bit systems**: Limited testing, may work but not officially supported
+- **ARM processors**: Limited testing on ARM-based systems (Apple Silicon, ARM64 Linux)
+
 ## 🛠️ Installation
 
 1. **Clone the repository:**
@@ -276,7 +384,9 @@ export https_proxy=socks5://127.0.0.1:9000
 ### Proxy Issues
 - Verify the proxy port is not in use by another application
 - Check if your application supports SOCKS5 proxies
-- On Windows, ensure you have administrator privileges for proxy configuration
+- **Windows Users**: Ensure you have administrator privileges for proxy configuration
+  - Right-click Command Prompt/PowerShell → "Run as administrator"
+  - If proxy settings don't apply, restart the application with admin rights
 - Test proxy connection: `curl --socks5 127.0.0.1:9000 https://httpbin.org/ip`
 
 ### Authentication Issues
