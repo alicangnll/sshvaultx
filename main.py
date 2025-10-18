@@ -534,11 +534,33 @@ def get_connection_details(args):
     
     return ip, port, username, password, key_file, key_passphrase
 
+def show_disclaimer():
+    """Show legal disclaimer"""
+    print("=" * 60)
+    print("IMPORTANT LEGAL NOTICE - READ CAREFULLY")
+    print("=" * 60)
+    print("This software is provided for educational and legitimate purposes only.")
+    print("Users are responsible for:")
+    print("- Compliance with all applicable laws and regulations")
+    print("- Only using this tool on systems you own or have explicit permission to access")
+    print("- Using strong authentication methods and keeping credentials secure")
+    print("- Being aware that network traffic may be monitored by administrators")
+    print("- Respecting the terms of service of any networks or services accessed")
+    print("")
+    print("The authors and contributors are not responsible for any misuse of this software.")
+    print("Use at your own risk and in accordance with applicable laws.")
+    print("=" * 60)
+    print("By continuing, you acknowledge that you have read and understood this notice.")
+    print("=" * 60)
+    print("")
+
 def main():
     """Main function"""
     args = parse_arguments()
     
+    # Always show disclaimer unless in quiet mode
     if not args.quiet:
+        show_disclaimer()
         print(f"Arguments: IP={args.ip}, Port={args.port}, User={args.user}, ProxyPort={args.proxy_port}, Quiet={args.quiet}")
     
     ip, port, username, password, key_file, key_passphrase = get_connection_details(args)
