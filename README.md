@@ -182,7 +182,32 @@ sudo rpm -i sshvaultx-1.0.0-1.noarch.rpm
 - **32-bit systems**: Limited testing, may work but not officially supported
 - **ARM processors**: Limited testing on ARM-based systems (Apple Silicon, ARM64 Linux)
 
-## 🛠️ Installation
+## 📦 Releases & Installation
+
+### Pre-built Packages (Recommended)
+
+Download pre-built packages for your operating system:
+
+| Platform | Package | Download | Installation |
+|----------|---------|----------|--------------|
+| **Debian/Ubuntu** | `.deb` | [Download](https://github.com/alicangnll/sshvaultx/releases/latest) | `sudo dpkg -i sshvaultx_*.deb` |
+| **Red Hat/CentOS/Fedora** | `.rpm` | [Download](https://github.com/alicangnll/sshvaultx/releases/latest) | `sudo rpm -i sshvaultx-*.rpm` |
+| **macOS (Homebrew)** | `.deb` | [Download](https://github.com/alicangnll/sshvaultx/releases/latest) | `sudo dpkg -i sshvaultx_*_macos.deb` |
+
+### Quick Install
+
+```bash
+# Download latest release
+wget https://github.com/alicangnll/sshvaultx/releases/latest/download/sshvaultx_1.0.0_[OS]_all.deb
+
+# Install (replace [OS] with your platform)
+sudo dpkg -i sshvaultx_1.0.0_[OS]_all.deb
+
+# Verify installation
+sshvaultx --help
+```
+
+### Build from Source
 
 1. **Clone the repository:**
    ```bash
@@ -433,9 +458,41 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 If you encounter any issues or have questions, please open an issue on GitHub.
 
+## 📋 Release Notes
+
+### Latest Release: v1.0.0
+
+**What's New:**
+- 🎉 Initial release of SSHVaultX VPN
+- 🔒 Full SOCKS5 proxy implementation
+- 🖥️ Cross-platform support (Windows, macOS, Linux)
+- 🔑 Multiple authentication methods (Password & SSH Key)
+- 🪟 Windows automatic proxy configuration
+- 🍺 Homebrew integration for macOS
+- 📦 Pre-built packages for all major platforms
+- 📚 Comprehensive documentation and Wiki
+
+**Download:**
+- [All Releases](https://github.com/alicangnll/sshvaultx/releases)
+- [Latest Release](https://github.com/alicangnll/sshvaultx/releases/latest)
+
+**Package Sizes:**
+- Debian/Ubuntu: ~15KB
+- Red Hat/CentOS/Fedora: ~12KB  
+- macOS (Homebrew): ~16KB
+
+### Previous Releases
+
+| Version | Date | Highlights |
+|---------|------|------------|
+| v1.0.0 | 2024-10-18 | Initial release with full feature set |
+
 ## 🔗 Links
 
 - **GitHub Repository**: [github.com/alicangnll/sshvaultx](https://github.com/alicangnll/sshvaultx)
+- **Releases**: [Latest Downloads](https://github.com/alicangnll/sshvaultx/releases)
+- **Wiki**: [Documentation](https://github.com/alicangnll/sshvaultx/wiki)
+- **Issues**: [Bug Reports & Feature Requests](https://github.com/alicangnll/sshvaultx/issues)
 - **Author**: [@alicangnll](https://github.com/alicangnll)
 
 ---
