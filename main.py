@@ -560,8 +560,9 @@ def main():
     
     # Always show disclaimer unless in quiet mode
     if not args.quiet:
-        show_disclaimer()
         print(f"Arguments: IP={args.ip}, Port={args.port}, User={args.user}, ProxyPort={args.proxy_port}, Quiet={args.quiet}")
+
+    show_disclaimer()
     
     ip, port, username, password, key_file, key_passphrase = get_connection_details(args)
     
