@@ -400,19 +400,19 @@ def parse_arguments():
         epilog="""
 Examples:
   # Password authentication
-  python alivpn_python.py --ip 192.168.1.100 --port 22 --user root --password mypass
+  python main.py --ip 192.168.1.100 --port 22 --user root --password mypass
   
   # SSH Key authentication
-  python alivpn_python.py --ip 192.168.1.100 --user root --key ~/.ssh/id_rsa
+  python main.py --ip 192.168.1.100 --user root --key ~/.ssh/id_rsa
   
   # SSH Key with passphrase
-  python alivpn_python.py --ip server.com --user admin --key ~/.ssh/id_rsa --key-passphrase mypassphrase
+  python main.py --ip server.com --user admin --key ~/.ssh/id_rsa --key-passphrase mypassphrase
   
   # Interactive mode
-  python alivpn_python.py --ip 10.0.0.1 --port 22 --user vpn --interactive
+  python main.py --ip 10.0.0.1 --port 22 --user vpn --interactive
   
   # Custom port with key
-  python alivpn_python.py --ip server.com --port 2222 --user admin --key ~/.ssh/id_rsa
+  python main.py --ip server.com --port 2222 --user admin --key ~/.ssh/id_rsa
         """
     )
     
