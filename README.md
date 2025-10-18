@@ -1,147 +1,133 @@
-# 🔐 SSHVaultX VPN
-
-> **Professional SSH-based VPN solution with enterprise-grade security and performance**
+# SSHVaultX VPN
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/License-Open%20Source-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-alicangnll-orange.svg)](https://github.com/alicangnll)
 
-## 🚀 Overview
+**Fast and Secure SSH over VPN** - Advanced Python implementation with proper SOCKS5 proxy support
 
-**SSHVaultX VPN** is a cutting-edge, open-source VPN solution that leverages SSH tunneling technology to provide secure, encrypted network connections. Built with Python, it offers enterprise-grade security without compromising on performance or ease of use.
+## 🚀 Features
 
-### ✨ Key Highlights
+- **SOCKS5 Proxy Support**: Full SOCKS5 implementation for seamless proxy tunneling
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Multiple Authentication Methods**: Password and SSH key authentication
+- **Windows Integration**: Automatic proxy configuration for Windows systems
+- **Interactive Mode**: User-friendly command-line interface
+- **Retry Logic**: Automatic connection retry with configurable timeouts
+- **Secure**: Uses Paramiko for robust SSH connections
 
-- **🔒 Military-Grade Encryption**: SSH-based tunneling ensures your data is protected with industry-standard encryption
-- **⚡ High Performance**: Optimized SOCKS5 proxy implementation for minimal latency
-- **🌐 Universal Compatibility**: Seamless operation across Windows, Linux, and macOS
-- **🛡️ Zero-Log Policy**: No data collection, no tracking, complete privacy
-- **🔧 Enterprise Ready**: Command-line interface perfect for automation and scripting
+## 📋 Requirements
 
-## 🎯 Features
+- Python 3.7 or higher
+- SSH server access (with password or key authentication)
 
-| Feature | Description |
-|---------|-------------|
-| **🔐 SSH Authentication** | Support for both password and SSH key authentication |
-| **⚡ SOCKS5 Proxy** | High-performance local proxy server on `127.0.0.1:9000` |
-| **🔄 Auto-Retry** | Intelligent connection retry mechanism with exponential backoff |
-| **⏱️ Timeout Control** | Configurable connection timeouts for optimal performance |
-| **🖥️ Cross-Platform** | Native support for Windows, Linux, and macOS |
-| **🔧 CLI Interface** | Professional command-line interface with full automation support |
-| **🛡️ Security First** | No logging, no data collection, complete privacy protection |
+## 🛠️ Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/alicangnll/sshvaultx.git
+   cd sshvaultx
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.7 or higher
-- SSH server access (Linux/Unix system)
-- Network connectivity
-
-### Installation
-
+### Password Authentication
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/SSHVaultX-VPN.git
-cd SSHVaultX-VPN
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Make executable (Linux/macOS)
-chmod +x alivpn_python.py
+python main.py --ip 192.168.1.100 --port 22 --user root --password mypass
 ```
 
-### Basic Usage
-
+### SSH Key Authentication
 ```bash
-# Interactive mode
-python3 alivpn_python.py --interactive
-
-# Command-line mode
-python3 alivpn_python.py --ip your-server.com --user username --password yourpassword
-
-# SSH Key authentication
-python3 alivpn_python.py --ip your-server.com --user username --key ~/.ssh/id_rsa
+python main.py --ip 192.168.1.100 --user root --key ~/.ssh/id_rsa
 ```
 
-## 📋 Platform Support
+### Interactive Mode
+```bash
+python main.py --ip 10.0.0.1 --port 22 --user vpn --interactive
+```
 
-| Platform | Status | Features |
-|----------|--------|----------|
-| **Windows** | ✅ Full Support | Auto proxy configuration, native integration |
-| **Linux** | ✅ Full Support | Manual proxy setup, systemd service ready |
-| **macOS** | ✅ Full Support | Manual proxy setup, launchd service ready |
-
-## 💻 Advanced Usage
+## 📖 Usage
 
 ### Command Line Options
 
-```bash
-python3 alivpn_python.py [OPTIONS]
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--ip`, `--host` | SSH server IP address or hostname | Required |
+| `--port`, `-p` | SSH server port | 22 |
+| `--user`, `-u`, `--username` | SSH username | Required |
+| `--password`, `-w` | SSH password | Optional |
+| `--key`, `-k`, `--keyfile` | SSH private key file path | Optional |
+| `--key-passphrase` | SSH private key passphrase | Optional |
+| `--interactive`, `-i` | Interactive mode | False |
+| `--proxy-port` | Local SOCKS5 proxy port | 9000 |
+| `--timeout`, `-t` | SSH connection timeout (seconds) | 10 |
+| `--quiet`, `-q` | Quiet mode (minimal output) | False |
 
-Options:
-  --ip, --host IP        SSH server IP address or hostname
-  --port, -p PORT        SSH server port (default: 22)
-  --user, -u USER        SSH username
-  --password, -w PASS    SSH password (not recommended for security)
-  --key, -k KEYFILE      SSH private key file path
-  --key-passphrase PASS  SSH private key passphrase
-  --interactive, -i      Interactive mode for missing credentials
-  --proxy-port PORT      Local SOCKS5 proxy port (default: 9000)
-  --timeout, -t SECONDS  SSH connection timeout (default: 10)
-  --quiet, -q            Quiet mode with minimal output
-  --help, -h             Show help message
+### Examples
+
+**Basic connection with password:**
+```bash
+python main.py --ip server.com --user admin --password mypassword
 ```
 
-### Usage Examples
-
+**SSH key with passphrase:**
 ```bash
-# Basic password authentication
-python3 alivpn_python.py --ip 192.168.1.100 --user admin --password secret123
+python main.py --ip server.com --user admin --key ~/.ssh/id_rsa --key-passphrase mypassphrase
+```
 
-# SSH key authentication
-python3 alivpn_python.py --ip server.example.com --user root --key ~/.ssh/id_rsa
+**Custom port and proxy:**
+```bash
+python main.py --ip server.com --port 2222 --user admin --key ~/.ssh/id_rsa --proxy-port 8080
+```
 
-# Custom port and proxy settings
-python3 alivpn_python.py --ip server.com --port 2222 --user vpn --key ~/.ssh/id_rsa --proxy-port 8080
-
-# Quiet mode for scripting
-python3 alivpn_python.py --ip server.com --user admin --password pass --quiet
-
-# Interactive mode
-python3 alivpn_python.py --interactive
+**Quiet mode:**
+```bash
+python main.py --ip server.com --user admin --key ~/.ssh/id_rsa --quiet
 ```
 
 ## 🔧 Configuration
 
-### Windows Proxy Setup
-SSHVaultX automatically configures Windows proxy settings when connected. No manual configuration required.
+### Windows Users
+SSHVaultX automatically configures Windows proxy settings when connected. The proxy will be set to `socks5://127.0.0.1:9000` (or your specified port).
 
-### Linux/macOS Proxy Setup
-Configure your applications to use SOCKS5 proxy:
-- **Host**: `127.0.0.1`
-- **Port**: `9000` (or custom port specified with `--proxy-port`)
-- **Type**: SOCKS5
+### Other Platforms
+Configure your applications to use the SOCKS5 proxy at `127.0.0.1:9000` (or your specified port).
 
-## 🛡️ Security & Privacy
+## 🛡️ Security Notes
 
-- **🔒 End-to-End Encryption**: All traffic is encrypted through SSH tunnel
-- **🛡️ Zero-Log Policy**: No data collection or logging
-- **🔐 Secure Authentication**: Support for SSH keys and passwords
-- **🌐 No DNS Leaks**: All DNS queries routed through secure tunnel
-- **⚡ No Data Retention**: No logs, no tracking, complete anonymity
+- **Password Security**: Avoid using `--password` in command line for security reasons. Use interactive mode instead.
+- **Key Files**: Ensure your SSH private keys have appropriate permissions (600).
+- **Server Trust**: The application uses `AutoAddPolicy()` for host keys. Consider implementing proper host key verification for production use.
 
-## 📊 Performance
+## 🔍 Troubleshooting
 
-- **Low Latency**: Optimized SOCKS5 implementation
-- **High Throughput**: Efficient data forwarding
-- **Memory Efficient**: Minimal resource usage
-- **Auto-Retry**: Intelligent reconnection on failures
-- **Timeout Control**: Configurable connection timeouts
+### Connection Issues
+- Verify SSH server credentials and accessibility
+- Check firewall settings on both client and server
+- Ensure the SSH server supports direct TCP connections
+
+### Proxy Issues
+- Verify the proxy port is not in use by another application
+- Check if your application supports SOCKS5 proxies
+- On Windows, ensure you have administrator privileges for proxy configuration
+
+### Authentication Issues
+- Verify SSH key file path and permissions
+- Check if the key file is encrypted and requires a passphrase
+- Ensure the SSH server accepts your authentication method
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -149,26 +135,29 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ⚠️ Legal Disclaimer
-
-This software is provided for educational and legitimate security purposes only. Users are responsible for complying with all applicable laws and regulations in their jurisdiction. The developers are not responsible for any misuse of this software.
-
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/SSHVaultX-VPN/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/SSHVaultX-VPN/discussions)
-- **Security**: [Security Policy](SECURITY.md)
+If you encounter any issues or have questions, please open an issue on GitHub.
+
+## ⚠️ Disclaimer
+
+**IMPORTANT LEGAL NOTICE**
+
+This software is provided for educational and legitimate purposes only. Users are responsible for:
+
+- **Compliance with Laws**: Ensure all usage complies with local, national, and international laws
+- **Authorization**: Only use this tool on systems you own or have explicit permission to access
+- **Security**: Use strong authentication methods and keep credentials secure
+- **Privacy**: Be aware that network traffic may be monitored by network administrators
+- **Terms of Service**: Respect the terms of service of any networks or services you access
+
+**The authors and contributors are not responsible for any misuse of this software. Use at your own risk.**
+
+## 🔗 Links
+
+- **GitHub Repository**: [github.com/alicangnll/sshvaultx](https://github.com/alicangnll/sshvaultx)
+- **Author**: [@alicangnll](https://github.com/alicangnll)
 
 ---
 
-<div align="center">
-
-**Made with ❤️ by the SSHVaultX Team**
-
-[⭐ Star this repo](https://github.com/yourusername/SSHVaultX-VPN) • [🐛 Report Bug](https://github.com/yourusername/SSHVaultX-VPN/issues) • [💡 Request Feature](https://github.com/yourusername/SSHVaultX-VPN/issues)
-
-</div>
+**Made with ❤️ by [@alicangnll](https://github.com/alicangnll)**
