@@ -23,8 +23,12 @@ HOMEPAGE="https://github.com/alicangnll/sshvaultx"
 ARCHITECTURE="noarch"
 REQUIRES="python3, python3-paramiko"
 
+# Get script directory and project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "${SCRIPT_DIR}")"
+
 # Directories
-BUILD_DIR="build"
+BUILD_DIR="${PROJECT_ROOT}/build"
 RPM_DIR="${BUILD_DIR}/rpm"
 SPEC_DIR="${RPM_DIR}/SPECS"
 SOURCES_DIR="${RPM_DIR}/SOURCES"
@@ -299,16 +303,12 @@ create_source_tarball() {
     mkdir -p "${tarball_dir}"
     
     # Copy source files
-    cp main.py "${tarball_dir}/"
-    cp requirements.txt "${tarball_dir}/"
-    cp README.md "${tarball_dir}/"
+    cp ../main.py "${tarball_dir}/"
+    cp ../requirements.txt "${tarball_dir}/"
+    cp ../README.md "${tarball_dir}/"
     
-    # Create tarball using absolute paths
-    local current_dir=$(pwd)
-    local sources_abs_path="${current_dir}/${SOURCES_DIR}"
-    
-    # Create tarball from the tarball directory
-    tar -czf "${sources_abs_path}/${tarball_name}.tar.gz" -C "${current_dir}/${BUILD_DIR}" "${tarball_name}/"
+    # Create tarball using relative paths
+    tar -czf "${SOURCES_DIR}/${tarball_name}.tar.gz" -C "${BUILD_DIR}" "${tarball_name}/"
     
     # Clean up temporary directory
     rm -rf "${tarball_dir}"
@@ -319,29 +319,16 @@ create_source_tarball() {
 build_rpm() {
     print_status "Building RPM package..."
     
-    # Get absolute paths
-    local current_dir=$(pwd)
-    local rpm_dir_abs="${current_dir}/${RPM_DIR}"
-    local sources_dir_abs="${current_dir}/${SOURCES_DIR}"
-    local specs_dir_abs="${current_dir}/${SPEC_DIR}"
-    local rpms_dir_abs="${current_dir}/${RPMS_DIR}"
-    local srpms_dir_abs="${current_dir}/${SRPMS_DIR}"
-    local buildroot_dir_abs="${current_dir}/${BUILDROOT_DIR}"
-    
-    # Set RPM build environment
-    export RPM_BUILD_ROOT="${buildroot_dir_abs}"
-    export RPM_BUILD_DIR="${rpm_dir_abs}"
-    
-    # Build the RPM
-    rpmbuild --define "_topdir ${rpm_dir_abs}" \
-             --define "_builddir ${rpm_dir_abs}/BUILD" \
-             --define "_rpmdir ${rpms_dir_abs}" \
-             --define "_sourcedir ${sources_dir_abs}" \
-             --define "_specdir ${specs_dir_abs}" \
-             --define "_srcrpmdir ${srpms_dir_abs}" \
-             --define "_buildrootdir ${buildroot_dir_abs}" \
-             --define "_tmppath ${rpm_dir_abs}/tmp" \
-             -ba "${specs_dir_abs}/${PACKAGE_NAME}.spec"
+    # Build the RPM using relative paths
+    rpmbuild --define "_topdir ${RPM_DIR}" \
+             --define "_builddir ${RPM_DIR}/BUILD" \
+             --define "_rpmdir ${RPMS_DIR}" \
+             --define "_sourcedir ${SOURCES_DIR}" \
+             --define "_specdir ${SPEC_DIR}" \
+             --define "_srcrpmdir ${SRPMS_DIR}" \
+             --define "_buildrootdir ${BUILDROOT_DIR}" \
+             --define "_tmppath ${RPM_DIR}/tmp" \
+             -ba "${SPEC_DIR}/${PACKAGE_NAME}.spec"
     
     # Find the built RPM
     local rpm_file=$(find "${RPMS_DIR}" -name "*.rpm" | head -1)
