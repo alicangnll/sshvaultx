@@ -337,6 +337,23 @@ HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings
 - **Key Files**: Ensure your SSH private keys have appropriate permissions (600).
 - **Server Trust**: The application uses `AutoAddPolicy()` for host keys. Consider implementing proper host key verification for production use.
 
+### Penetration Testing & Security Audits
+
+**⚠️ Legal Use Only**: This tool is designed for authorized security testing and legitimate use cases only.
+
+**Common Penetration Testing Scenarios:**
+- **Network Pivoting**: Use compromised servers to access internal networks
+- **Bypass Network Segmentation**: Access restricted resources through accessible servers
+- **Lateral Movement**: Move through internal networks using compromised credentials
+- **Privilege Escalation**: Access higher-privileged systems through lower-privileged servers
+
+**Best Practices for Security Testing:**
+- Always obtain proper authorization before testing
+- Document all activities and findings
+- Use strong authentication methods (SSH keys preferred)
+- Clean up after testing (disconnect properly)
+- Follow responsible disclosure practices
+
 ## 📊 Use Cases & Examples
 
 ### Common Scenarios
@@ -367,6 +384,25 @@ python main.py --ip test-server.com --user developer --interactive
 # Route all traffic through encrypted tunnel
 python main.py --ip privacy-server.com --user anonymous --key ~/.ssh/id_rsa --quiet
 # Your ISP can only see encrypted SSH traffic
+```
+
+#### 5. Penetration Testing & Security Audits
+```bash
+# Scenario: You have SSH credentials but no direct access to target systems
+# Use SSHVaultX to pivot through accessible servers to reach internal networks
+
+# Step 1: Connect through accessible server
+python main.py --ip accessible-server.internal --user pentester --password found_password
+
+# Step 2: Now all your traffic appears to come from accessible-server.internal
+# You can now:
+# - Scan internal networks from the server's perspective
+# - Access internal services that only allow connections from internal IPs
+# - Bypass network segmentation and access restricted resources
+# - Perform lateral movement within the internal network
+
+# Example: Access internal web application
+curl --socks5 127.0.0.1:9000 http://internal-app.corp.local/admin
 ```
 
 ### Application Configuration Examples
@@ -431,15 +467,23 @@ export https_proxy=socks5://127.0.0.1:9000
 
 **IMPORTANT LEGAL NOTICE**
 
-This software is provided for educational and legitimate purposes only. Users are responsible for:
+This software is provided for educational, legitimate, and authorized security testing purposes only. Users are responsible for:
 
 - **Compliance with Laws**: Ensure all usage complies with local, national, and international laws
-- **Authorization**: Only use this tool on systems you own or have explicit permission to access
+- **Authorization**: Only use this tool on systems you own or have explicit written permission to access
+- **Security Testing**: For penetration testing, obtain proper authorization and follow responsible disclosure practices
 - **Security**: Use strong authentication methods and keep credentials secure
 - **Privacy**: Be aware that network traffic may be monitored by network administrators
 - **Terms of Service**: Respect the terms of service of any networks or services you access
+- **Documentation**: Maintain proper documentation of all testing activities and findings
 
-**The authors and contributors are not responsible for any misuse of this software. Use at your own risk.**
+**Prohibited Uses:**
+- Unauthorized access to systems or networks
+- Malicious activities or cyber attacks
+- Violation of any applicable laws or regulations
+- Any activity that could cause harm or damage
+
+**The authors and contributors are not responsible for any misuse of this software. Use at your own risk and in accordance with applicable laws.**
 
 ## 📝 License
 
