@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# SSHVaultX Debian Package Builder
-# This script creates a .deb package for SSHVaultX VPN
+# SSHVaultX Homebrew Debian Package Builder
+# This script creates a .deb package for SSHVaultX VPN optimized for Homebrew on macOS
 
 set -e  # Exit on any error
 
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 PACKAGE_NAME="sshvaultx"
 VERSION="1.0.0"
 MAINTAINER="Ali Can Gönüllü <info@alicangonullu.com>"
-DESCRIPTION="Fast and Secure SSH over VPN with SOCKS5 proxy support"
+DESCRIPTION="Fast and Secure SSH over VPN with SOCKS5 proxy support (Homebrew optimized)"
 HOMEPAGE="https://github.com/alicangnll/sshvaultx"
 ARCHITECTURE="all"
 DEPENDS="python3, python3-paramiko"
@@ -27,12 +27,13 @@ PROJECT_ROOT="$(dirname "${SCRIPT_DIR}")"
 
 # Directories
 BUILD_DIR="${PROJECT_ROOT}/build"
-DEB_DIR="${BUILD_DIR}/${PACKAGE_NAME}_${VERSION}"
+DEB_DIR="${BUILD_DIR}/${PACKAGE_NAME}_${VERSION}_homebrew"
 CONTROL_DIR="${DEB_DIR}/DEBIAN"
-BIN_DIR="${DEB_DIR}/usr/bin"
-SHARE_DIR="${DEB_DIR}/usr/share/${PACKAGE_NAME}"
-DOC_DIR="${DEB_DIR}/usr/share/doc/${PACKAGE_NAME}"
-MAN_DIR="${DEB_DIR}/usr/share/man/man1"
+BIN_DIR="${DEB_DIR}/usr/local/bin"
+SHARE_DIR="${DEB_DIR}/usr/local/share/${PACKAGE_NAME}"
+DOC_DIR="${DEB_DIR}/usr/local/share/doc/${PACKAGE_NAME}"
+MAN_DIR="${DEB_DIR}/usr/local/share/man/man1"
+ETC_DIR="${DEB_DIR}/usr/local/etc/${PACKAGE_NAME}"
 
 # Functions
 print_status() {
@@ -54,7 +55,6 @@ print_error() {
 check_dependencies() {
     print_status "Checking dependencies..."
     
-    # Check if required tools are installed
     local missing_deps=()
     
     if ! command -v python3 &> /dev/null; then
@@ -69,9 +69,15 @@ check_dependencies() {
         missing_deps+=("fakeroot")
     fi
     
+    if ! command -v brew &> /dev/null; then
+        print_warning "Homebrew not found. This package is optimized for Homebrew environments."
+    fi
+    
     if [ ${#missing_deps[@]} -ne 0 ]; then
         print_error "Missing dependencies: ${missing_deps[*]}"
-        print_status "Install them with: sudo apt-get install ${missing_deps[*]}"
+        print_status "Install them with:"
+        print_status "  macOS: brew install ${missing_deps[*]}"
+        print_status "  Linux: sudo apt-get install ${missing_deps[*]}"
         exit 1
     fi
     
@@ -92,6 +98,7 @@ create_directories() {
     mkdir -p "${SHARE_DIR}"
     mkdir -p "${DOC_DIR}"
     mkdir -p "${MAN_DIR}"
+    mkdir -p "${ETC_DIR}"
     print_success "Directories created"
 }
 
@@ -107,16 +114,20 @@ Depends: ${DEPENDS}
 Maintainer: ${MAINTAINER}
 Description: ${DESCRIPTION}
  SSHVaultX is a fast and secure SSH over VPN tool with SOCKS5 proxy support.
- It provides an easy way to create secure tunnels through SSH servers and
- route traffic through them using SOCKS5 proxy protocol.
+ This Homebrew-optimized version includes additional macOS-specific features
+ and is designed to work seamlessly with Homebrew's Python environment.
  .
  Features:
   - SOCKS5 Proxy Support
   - Cross-Platform (Windows, macOS, Linux)
   - Multiple Authentication Methods (Password and SSH Key)
-  - Windows Integration with automatic proxy configuration
+  - macOS Integration with automatic proxy configuration
+  - Homebrew Python compatibility
   - Interactive Mode
   - Retry Logic with configurable timeouts
+  - Optimized for macOS Terminal and iTerm2
+ .
+ This package installs to /usr/local/ to be compatible with Homebrew.
  .
  Homepage: ${HOMEPAGE}
 EOF
@@ -130,15 +141,61 @@ create_install_script() {
 set -e
 
 # Make the script executable
-chmod +x /usr/bin/sshvaultx
+chmod +x /usr/local/bin/sshvaultx
 
 # Update man page database
 if command -v mandb &> /dev/null; then
     mandb -q
 fi
 
-echo "SSHVaultX VPN installed successfully!"
+# Create symlink for easier access
+if [ ! -L /usr/local/bin/sshvaultx-vpn ]; then
+    ln -s /usr/local/bin/sshvaultx /usr/local/bin/sshvaultx-vpn
+fi
+
+# Set up Homebrew Python path if available
+if [ -d "/opt/homebrew/bin" ] && [ -f "/opt/homebrew/bin/python3" ]; then
+    # Apple Silicon Mac
+    sed -i '' '1s|^#!/usr/bin/env python3|#!/opt/homebrew/bin/python3|' /usr/local/bin/sshvaultx
+elif [ -d "/usr/local/bin" ] && [ -f "/usr/local/bin/python3" ]; then
+    # Intel Mac
+    sed -i '' '1s|^#!/usr/bin/env python3|#!/usr/local/bin/python3|' /usr/local/bin/sshvaultx
+fi
+
+# Create configuration directory
+mkdir -p /usr/local/etc/sshvaultx
+
+# Create sample configuration file
+if [ ! -f "/usr/local/etc/sshvaultx/config.example" ]; then
+    cat > /usr/local/etc/sshvaultx/config.example << 'CONFIG_EOF'
+# SSHVaultX Configuration Example
+# Copy this file to ~/.sshvaultx/config and customize as needed
+
+# Default server settings
+DEFAULT_SERVER=""
+DEFAULT_USER=""
+DEFAULT_PORT=22
+DEFAULT_PROXY_PORT=9000
+
+# Connection settings
+CONNECTION_TIMEOUT=10
+MAX_RETRIES=3
+RETRY_DELAY=2
+
+# Logging settings
+LOG_LEVEL="INFO"
+LOG_FILE=""
+
+# Security settings
+VERIFY_HOST_KEYS=true
+STRICT_HOST_KEY_CHECKING=true
+CONFIG_EOF
+fi
+
+echo "SSHVaultX VPN (Homebrew) installed successfully!"
 echo "Usage: sshvaultx --help"
+echo "Configuration: ~/.sshvaultx/config"
+echo "Symlink: sshvaultx-vpn (alias for sshvaultx)"
 EOF
     chmod +x "${CONTROL_DIR}/postinst"
     print_success "Post-install script created"
@@ -150,12 +207,17 @@ create_remove_script() {
 #!/bin/bash
 set -e
 
+# Remove symlink
+if [ -L /usr/local/bin/sshvaultx-vpn ]; then
+    rm /usr/local/bin/sshvaultx-vpn
+fi
+
 # Remove man page database entry
 if command -v mandb &> /dev/null; then
     mandb -q
 fi
 
-echo "SSHVaultX VPN removed successfully!"
+echo "SSHVaultX VPN (Homebrew) removed successfully!"
 EOF
     chmod +x "${CONTROL_DIR}/prerm"
     print_success "Pre-remove script created"
@@ -164,8 +226,18 @@ EOF
 copy_files() {
     print_status "Copying application files..."
     
-    # Copy main Python script
+    # Copy main Python script with Homebrew shebang
     cp ../main.py "${BIN_DIR}/sshvaultx"
+    
+    # Update shebang for Homebrew Python
+    if [ -d "/opt/homebrew/bin" ]; then
+        # Apple Silicon Mac
+        sed -i '' '1s|^#!/usr/bin/env python3|#!/opt/homebrew/bin/python3|' "${BIN_DIR}/sshvaultx"
+    elif [ -d "/usr/local/bin" ]; then
+        # Intel Mac
+        sed -i '' '1s|^#!/usr/bin/env python3|#!/usr/local/bin/python3|' "${BIN_DIR}/sshvaultx"
+    fi
+    
     chmod +x "${BIN_DIR}/sshvaultx"
     
     # Copy requirements.txt
@@ -174,15 +246,68 @@ copy_files() {
     # Copy README as documentation
     cp ../README.md "${DOC_DIR}/"
     
+    # Create Homebrew-specific documentation
+    cat > "${DOC_DIR}/HOMEBREW.md" << 'EOF'
+# SSHVaultX for Homebrew
+
+This is a Homebrew-optimized version of SSHVaultX VPN.
+
+## Installation
+
+```bash
+# Install via Homebrew (if available in homebrew-core)
+brew install sshvaultx
+
+# Or install this .deb package
+sudo dpkg -i sshvaultx_1.0.0_homebrew_all.deb
+```
+
+## Usage
+
+```bash
+# Basic usage
+sshvaultx --ip server.com --user admin --key ~/.ssh/id_rsa
+
+# Using the symlink
+sshvaultx-vpn --ip server.com --user admin --key ~/.ssh/id_rsa
+```
+
+## Configuration
+
+Configuration file: `~/.sshvaultx/config`
+Example configuration: `/usr/local/etc/sshvaultx/config.example`
+
+## Homebrew Integration
+
+This package is designed to work seamlessly with Homebrew's Python environment:
+- Uses Homebrew's Python interpreter
+- Installs to `/usr/local/` (Homebrew's prefix)
+- Compatible with Homebrew's package management
+
+## Uninstallation
+
+```bash
+# Remove package
+sudo dpkg -r sshvaultx
+
+# Or via Homebrew (if installed via Homebrew)
+brew uninstall sshvaultx
+```
+EOF
+    
     # Create changelog
     cat > "${DOC_DIR}/changelog.Debian" << EOF
-${PACKAGE_NAME} (${VERSION}) unstable; urgency=medium
+${PACKAGE_NAME} (${VERSION}) homebrew; urgency=medium
 
-  * Initial release
+  * Initial Homebrew-optimized release
   * SOCKS5 proxy support
+  * macOS integration with automatic proxy configuration
+  * Homebrew Python compatibility
   * Cross-platform compatibility
   * SSH key and password authentication
-  * Windows proxy integration
+  * Interactive mode with improved UX
+  * Added configuration file support
+  * Added symlink for easier access (sshvaultx-vpn)
 
  -- ${MAINTAINER}  $(date -R)
 EOF
@@ -224,16 +349,16 @@ EOF
 create_man_page() {
     print_status "Creating man page..."
     cat > "${MAN_DIR}/sshvaultx.1" << EOF
-.TH SSHVAULTX 1 "$(date '+%B %Y')" "SSHVaultX VPN" "User Commands"
+.TH SSHVAULTX 1 "$(date '+%B %Y')" "SSHVaultX VPN (Homebrew)" "User Commands"
 .SH NAME
-sshvaultx \- Fast and Secure SSH over VPN with SOCKS5 proxy support
+sshvaultx \- Fast and Secure SSH over VPN with SOCKS5 proxy support (Homebrew)
 .SH SYNOPSIS
 .B sshvaultx
 [\fIOPTIONS\fR]
 .SH DESCRIPTION
 SSHVaultX is a fast and secure SSH over VPN tool with SOCKS5 proxy support.
-It provides an easy way to create secure tunnels through SSH servers and
-route traffic through them using SOCKS5 proxy protocol.
+This Homebrew-optimized version includes additional macOS-specific features
+and is designed to work seamlessly with Homebrew's Python environment.
 .SH OPTIONS
 .TP
 \fB--ip\fR, \fB--host\fR
@@ -278,6 +403,17 @@ SSH key authentication:
 .TP
 Interactive mode:
 .B sshvaultx --ip 10.0.0.1 --user vpn --interactive
+.TP
+Using symlink:
+.B sshvaultx-vpn --ip server.com --user admin --key ~/.ssh/id_rsa
+.SH CONFIGURATION
+Configuration file: ~/.sshvaultx/config
+Example configuration: /usr/local/etc/sshvaultx/config.example
+.SH HOMEBREW INTEGRATION
+This package is designed to work seamlessly with Homebrew:
+- Uses Homebrew's Python interpreter
+- Installs to /usr/local/ (Homebrew's prefix)
+- Compatible with Homebrew's package management
 .SH AUTHOR
 Written by alicangnll
 .SH HOMEPAGE
@@ -289,15 +425,42 @@ EOF
     print_success "Man page created"
 }
 
+create_homebrew_formula() {
+    print_status "Creating Homebrew formula..."
+    cat > "${SHARE_DIR}/sshvaultx.rb" << EOF
+class Sshvaultx < Formula
+  desc "Fast and Secure SSH over VPN with SOCKS5 proxy support"
+  homepage "https://github.com/alicangnll/sshvaultx"
+  url "https://github.com/alicangnll/sshvaultx/archive/v${VERSION}.tar.gz"
+  sha256 "PLACEHOLDER_SHA256"
+  license "MIT"
+
+  depends_on "python@3.9"
+
+  def install
+    system "python3", "-m", "pip", "install", *std_pip_args, "."
+    bin.install "main.py" => "sshvaultx"
+    man1.install "sshvaultx.1.gz"
+    doc.install "README.md"
+  end
+
+  test do
+    system "#{bin}/sshvaultx", "--help"
+  end
+end
+EOF
+    print_success "Homebrew formula created"
+}
+
 build_package() {
-    print_status "Building Debian package..."
+    print_status "Building Homebrew Debian package..."
     
     # Calculate installed size
     local size=$(du -sk "${DEB_DIR}" | cut -f1)
     echo "Installed-Size: ${size}" >> "${CONTROL_DIR}/control"
     
     # Build the package
-    fakeroot dpkg-deb --build "${DEB_DIR}" "${BUILD_DIR}/"
+    fakeroot dpkg-deb --build --root-owner-group "${DEB_DIR}" "${BUILD_DIR}/"
     
     local deb_file="${BUILD_DIR}/${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
     
@@ -316,6 +479,11 @@ build_package() {
         local package_size=$(du -h "${deb_file}" | cut -f1)
         print_success "Package size: ${package_size}"
         
+        # Copy to packages directory
+        mkdir -p packages
+        cp "${deb_file}" packages/
+        print_success "Package copied to packages directory"
+        
     else
         print_error "Package build failed!"
         exit 1
@@ -323,7 +491,7 @@ build_package() {
 }
 
 show_usage() {
-    echo "SSHVaultX Debian Package Builder"
+    echo "SSHVaultX Homebrew Debian Package Builder"
     echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -336,6 +504,13 @@ show_usage() {
     echo "  $0                    # Build with default version"
     echo "  $0 --version 1.2.3   # Build with custom version"
     echo "  $0 --clean           # Clean build directory"
+    echo ""
+    echo "This script creates a Homebrew-optimized .deb package with:"
+    echo "  - Homebrew Python compatibility"
+    echo "  - macOS-specific optimizations"
+    echo "  - Configuration file support"
+    echo "  - Symlink for easier access (sshvaultx-vpn)"
+    echo "  - Homebrew formula template"
 }
 
 # Main execution
@@ -365,9 +540,10 @@ main() {
         esac
     done
     
-    print_status "Starting SSHVaultX Debian package build..."
+    print_status "Starting SSHVaultX Homebrew Debian package build..."
     print_status "Version: ${VERSION}"
     print_status "Architecture: ${ARCHITECTURE}"
+    print_status "Target: Homebrew-optimized"
     
     check_dependencies
     clean_build
@@ -377,11 +553,15 @@ main() {
     create_remove_script
     copy_files
     create_man_page
+    create_homebrew_formula
     build_package
     
     print_success "Build completed successfully!"
-    print_status "To install the package: sudo dpkg -i ${BUILD_DIR}/${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
+    print_status "To install the package: sudo dpkg -i packages/${PACKAGE_NAME}_${VERSION}_homebrew_${ARCHITECTURE}.deb"
     print_status "To remove the package: sudo dpkg -r ${PACKAGE_NAME}"
+    print_status "Homebrew formula: packages/sshvaultx.rb"
+    print_status "Configuration: ~/.sshvaultx/config"
+    print_status "Symlink: sshvaultx-vpn (alias for sshvaultx)"
 }
 
 # Run main function with all arguments

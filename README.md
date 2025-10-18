@@ -28,30 +28,6 @@ SSHVaultX creates a secure tunnel through SSH and routes all your network traffi
 [Your Computer] ←→ [SOCKS5 Proxy:127.0.0.1:9000] ←→ [SSH Tunnel] ←→ [Remote Server] ←→ [Internet]
 ```
 
-## 📋 Requirements
-
-- Python 3.7 or higher
-- SSH server access (with password or key authentication)
-
-## 💻 Operating System Compatibility
-
-### Supported Platforms
-
-| Operating System | Version | Status | Notes |
-|------------------|---------|--------|-------|
-| **Windows** | Windows 10/11 | ✅ Fully Supported | Automatic proxy configuration |
-| **Windows** | Windows 8.1 | ✅ Supported | Manual proxy configuration |
-| **Windows** | Windows 7 | ⚠️ Limited | Manual proxy configuration |
-| **macOS** | 10.14+ | ✅ Fully Supported | Manual proxy configuration |
-| **macOS** | 10.12-10.13 | ✅ Supported | Manual proxy configuration |
-| **Linux** | Ubuntu 18.04+ | ✅ Fully Supported | Manual proxy configuration |
-| **Linux** | Debian 9+ | ✅ Fully Supported | Manual proxy configuration |
-| **Linux** | CentOS 7+ | ✅ Fully Supported | Manual proxy configuration |
-| **Linux** | RHEL 7+ | ✅ Fully Supported | Manual proxy configuration |
-| **Linux** | Fedora 30+ | ✅ Fully Supported | Manual proxy configuration |
-| **Linux** | Arch Linux | ✅ Fully Supported | Manual proxy configuration |
-| **Linux** | openSUSE 15+ | ✅ Fully Supported | Manual proxy configuration |
-
 ### Core Components
 
 1. **SSH Client**: Establishes secure connection to remote server using Paramiko
@@ -92,6 +68,30 @@ SSHVaultX creates a secure tunnel through SSH and routes all your network traffi
 - **Secure Authentication**: Supports SSH keys and strong passwords
 - **Connection Validation**: Verifies SSH server before establishing tunnel
 - **Graceful Shutdown**: Properly cleans up connections and settings
+
+## 📋 Requirements
+
+- Python 3.7 or higher
+- SSH server access (with password or key authentication)
+
+## 💻 Operating System Compatibility
+
+### Supported Platforms
+
+| Operating System | Version | Status | Notes |
+|------------------|---------|--------|-------|
+| **Windows** | Windows 10/11 | ✅ Fully Supported | Automatic proxy configuration |
+| **Windows** | Windows 8.1 | ✅ Supported | Manual proxy configuration |
+| **Windows** | Windows 7 | ⚠️ Limited | Manual proxy configuration |
+| **macOS** | 10.14+ | ✅ Fully Supported | Manual proxy configuration |
+| **macOS** | 10.12-10.13 | ✅ Supported | Manual proxy configuration |
+| **Linux** | Ubuntu 18.04+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | Debian 9+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | CentOS 7+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | RHEL 7+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | Fedora 30+ | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | Arch Linux | ✅ Fully Supported | Manual proxy configuration |
+| **Linux** | openSUSE 15+ | ✅ Fully Supported | Manual proxy configuration |
 
 ### Platform-Specific Features
 
